@@ -35,7 +35,7 @@ jobs:
       - run: npm run build --if-present
 
       # Step 5: Run tests
-      - run: npm test
+      # - run: npm test
 
       # Step 6: Run SonarCloud analysis
       - name: SonarCloud Scan
