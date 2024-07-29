@@ -2,6 +2,9 @@
   "name": "explora-local",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "dotenv -e .env.development.local -- ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
