@@ -5,7 +5,7 @@ const pasorobao="/images/paso_robao.jpg"
 
 export async function generateStaticParams() {
   // fetch here. (Remember the try catch block for the fetch and .json())
-  // const object = await fetch(...)
+  const object = await fetch('/api/object/ '
 
   // return...
 }
