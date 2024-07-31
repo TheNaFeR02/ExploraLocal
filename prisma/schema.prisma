@@ -14,12 +14,28 @@ datasource db {
 }
 
 model Object {
-  id                Int      @id @default(autoincrement())
-  image             String?
-  title             String
-  subtitle          String?
-  description       String
-  details           Json?
-  frequentQuestions Json?
-  createdAt         DateTime @default(now())
+  id                  Int                @id @default(autoincrement())
+  image               String?
+  title               String
+  subtitle            String?
+  description         String
+  details             Detail[]
+  frequentQuestions   FrequentQuestion[]
+  createdAt           DateTime           @default(now())
+}
+
+model FrequentQuestion {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
+  object   Object @relation(fields: [objectId], references: [id])
+  objectId Int
+}
+
+model Detail {
+  id       Int    @id @default(autoincrement())
+  key      String
+  value    String
+  object   Object @relation(fields: [objectId], references: [id])
+  objectId Int
 }

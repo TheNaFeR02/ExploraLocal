@@ -1,11 +1,21 @@
 import prisma from '../src/lib/prisma';
 import { elPasoRobao } from '../src/utils/exampleData/elPasoRobao';
-// const prisma = require("../src/lib/prisma");
-// const { elPasoRobao } = require("../src/utils/exampleData/elPasoRobao");
+// import { elPasoGrande } from '../src/utils/exampleData/pasoGrande'
 
 async function main() {
   const newEntry = await prisma.object.create({
-    data: elPasoRobao,
+    data: {
+      image: elPasoRobao.image,
+      title: elPasoRobao.title,
+      subtitle: elPasoRobao.subtitle,
+      description: elPasoRobao.description,
+      details: {
+        create: elPasoRobao.details,
+      },
+      frequentQuestions: {
+        create: elPasoRobao.frequentQuestions,
+      },
+    },
   })
 
   console.log('New entry created:', newEntry);
