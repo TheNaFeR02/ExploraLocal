@@ -35,26 +35,12 @@ export default function ObjectPage({ object }: { object: CustomObject }) {
       <div>
         <h3 className='p-7 font-semibold text-xl'>Detalles</h3>
         {object.details.map((detail) => (
-          <div key={detail.id} className='flex'>
-            <p>{detail.key}</p>
-            <p>{detail.value}</p>
+          <div key={detail.id} className='flex px-8 py-2 text-sm '>
+            <p className='font-semibold w-24'>{detail.key}</p>
+            <p className=''>{detail.value}</p>
           </div>
         ))}
       </div>
-      {/* <h1><i>Object Page</i></h1>
-      <h2>{object.title}</h2>
-      <h3>{object.subtitle}</h3>
-      <Image
-        src={object.image || ''}
-        alt={object.title || 'Image not found'}
-        width={800}
-        height={450}
-      />
-      <p>{object.description}</p>
-      <p>{object.frequentQuestions?.toString()}</p> */}
-
-
-
     </div>
   )
 }

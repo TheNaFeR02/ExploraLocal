@@ -4,6 +4,7 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }) {
 
+    //TODO: validate
   const id = Number(params.id)
   const object = await prisma.object.findUnique({
     where: {
