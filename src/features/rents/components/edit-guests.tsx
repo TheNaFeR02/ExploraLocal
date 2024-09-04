@@ -19,8 +19,9 @@ export default function EditGuests() {
   const [babies, setBabies] = useState(0)
 
   return (
-    <>
-      <div>
+
+        <div className='flex justify-between'>
+<div>
         <p className='font-medium'>Huéspedes</p>
         <p>{adults} Adultos</p>
         {kids >= 1 && <p>{kids} Niños</p>}
@@ -158,6 +159,7 @@ export default function EditGuests() {
           </DrawerContent>
         </Drawer>
       </div>
-    </>
+        </div>
+      
   )
 }

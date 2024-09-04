@@ -7,7 +7,7 @@ import EditBookingDate from "./edit-booking-date"
 import EditGuests from "./edit-guests"
 
 
-export default async function BookReservation({ bookings, rentId }: { bookings: RentBooking[], rentId: number }) {
+export default async function BookReservation({ bookings, rentId, numberOfDays }: { bookings: RentBooking[], rentId: number, numberOfDays: number }) {
   // TODO: Show header "Haz tu reserva" h1
   // TODO: Show photo with information. Title. Place-> Mompox-Bolívar
   // TODO: Fecha -> editar(calendar) 
@@ -40,13 +40,17 @@ export default async function BookReservation({ bookings, rentId }: { bookings: 
 
   if (!rent) return <p>Error uploading the rent.</p>
 
+
+  const costPerNight = rent.price
+  const subtotal = rent.price * numberOfDays
+  const serviceTax = subtotal * 0.15
+  const total = subtotal + serviceTax
   return (
     <div className="p-5">
       <div>
         <h1 className="font-bold text-xl">Haz tu reserva</h1>
       </div>
 
-      {/* <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr> */}
       <div className='flex gap-2 py-2'>
 
         <div className=''>
@@ -62,46 +66,45 @@ export default async function BookReservation({ bookings, rentId }: { bookings: 
           <p className='text-sm'>Mompox-Bolívar</p>
         </div>
       </div>
+
       <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
+
       <div className='pt-4'>
         <h2 className='font-semibold'>Fecha y huéspedes</h2>
       </div>
-      {/* <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr> */}
-      <div>
-        {/* <div className='flex justify-between'> */}
+      <div className='py-3'>
         <EditBookingDate bookings={bookings} />
-        {/* <div>
-            <p className='font-medium'>Fechas</p>
-            <p>6-8ag</p>
-          </div>
-          <div className="self-center">
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button variant="link">
-                  <span className='underline'>Cambiar</span>
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent>
-                <div className="mx-auto">
-                <CalendarRent bookings={bookings}></CalendarRent>
-                </div>
-              </DrawerContent>
-            </Drawer>
-          </div> */}
-        {/* </div> */}
+        <EditGuests />
+      </div>
+
+      <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
+
+      <div className='pt-4'>
+        <h2 className='font-semibold pb-4'>Precio</h2>
+      </div>
+      <div className='flex flex-col gap-[0.5px] pb-3'>
         <div className='flex justify-between'>
-          <EditGuests />
-          {/* <div>
-            <p className='font-medium'>Huéspedes</p>
-            <p>2 Adultos</p>
-          </div>
-          <div className="self-center">
-            <Button variant="link">
-              <span className='underline'>Cambiar</span>
-            </Button>
-          </div> */}
+          <p>{rent.price} x noche</p>
+          <p>${rent.price * numberOfDays}</p>
+        </div>
+        <div className='flex justify-between'>
+          <p>Tarifa de servicio</p>
+          <p>${rent.price * numberOfDays * 0.15}</p>
+        </div>
+        <div className='flex justify-between font-medium'>
+          <p>Total</p>
+          <p>${total}</p>
         </div>
       </div>
+
+      <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
+
+      <div className='pt-4'>
+        <h2 className='font-semibold pb-4'>Método de pago</h2>
+      </div>
+      
+
+
     </div>
   )
 }

@@ -12,16 +12,44 @@ import {
 } from "@/components/ui/drawer"
 import CalendarRent from "./rent-calendar"
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function EditBookingDate({ bookings }: { bookings: RentBooking[] }) {
   const [dateFromChild, setDateFromChild] = useState<DateRange | undefined>();
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const createQueryString = useCallback(
+    (params: Record<string, string>) => {
+      const searchParams = new URLSearchParams(window.location.search)
+      Object.keys(params).forEach(key => {
+        searchParams.set(key, params[key])
+      })
+      return searchParams.toString()
+    },
+    []
+  )
+
+  const handleUpdateQueryParams = () => {
+
+    if (dateFromChild && dateFromChild.from && dateFromChild.to) {
+      const fromDate = dateFromChild.from.toISOString().split('T')[0]
+      const toDate = dateFromChild.to.toISOString().split('T')[0]
+      console.log("fromdate and todate", fromDate, toDate)
+      router.push(pathname + '?' + createQueryString({ from: fromDate, to: toDate }))
+    }
+  }
 
   function handleDataFromChild(data: DateRange | undefined) {
-    console.log("padre recibió", data)
     setDateFromChild(data);
   }
+
+  useEffect(() => {
+    handleUpdateQueryParams()
+  }, [dateFromChild])
 
   function formatDateRange(dateRange: DateRange | undefined): string {
     if (!dateRange || !dateRange.from || !dateRange.to) return "Elegir días";

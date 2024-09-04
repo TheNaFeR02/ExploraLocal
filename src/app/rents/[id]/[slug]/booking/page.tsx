@@ -3,7 +3,18 @@ import prisma from '@/lib/prisma'
 import BookReservation from "@/features/rents/components/book-reservation"
 import { Prisma } from '@prisma/client'
 
-export default function BookingRent({ params }: { params: { id: string, slug: string } }) {
+// Function to calculate the number of days between two dates
+function calculateNumberOfDays(from: string | undefined, to: string | undefined): number {
+  if (!from || !to) return 0;
+
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+
+  const timeDifference = toDate.getTime() - fromDate.getTime();
+  return timeDifference / (1000 * 3600 * 24); // Convert milliseconds to days
+}
+
+export default function BookingRent({ params, searchParams }: { params: { id: string, slug: string }, searchParams?: { from?: string, to?: string } }) {
   const slug = params.slug
   const id = Number(params.id)
 
@@ -20,8 +31,11 @@ export default function BookingRent({ params }: { params: { id: string, slug: st
     }
   })
     .then(bookings => {
-      console.log("booking for this rent:",bookings)
-      return <BookReservation bookings={bookings} rentId={id} />
+      // Calculate the number of days between 'from' and 'to'
+      const numberOfDays = calculateNumberOfDays(searchParams?.from, searchParams?.to);
+
+      // console.log("params url", searchParams)
+      return <BookReservation bookings={bookings} rentId={id} numberOfDays={numberOfDays} />
     })
     .catch(e => {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {

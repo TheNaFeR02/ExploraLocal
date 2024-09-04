@@ -41,9 +41,13 @@ export default function CalendarRent({ bookings, sendDataToParent }: { bookings:
         disabled={disabledDates}
       />
       <div className='py-4 flex flex-col w-3/4 mx-auto gap-3'>
-        <Button onClick={handleClick}>Confirmar</Button>
+        {/* <Button onClick={handleClick}>Confirmar</Button>
         <DrawerClose asChild>
           <Button variant="secondary">Cancelar</Button>
+        </DrawerClose> */}
+
+        <DrawerClose asChild>
+          <Button onClick={handleClick}>Confirmar</Button>
         </DrawerClose>
       </div>
     </>
