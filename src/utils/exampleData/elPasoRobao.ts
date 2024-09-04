@@ -1,6 +1,7 @@
 export const elPasoRobao = {
   image: '/images/paso_robao.jpg',
   title: 'El Paso Robao',
+  slug: 'el-paso-robao',
   subtitle: 'A Historical Landmark in Mompox',
   description: 'El Paso Robao is a historic landmark in Mompox known for its rich cultural heritage and architectural beauty. It is an essential part of the town’s history and a popular site for visitors.',
   details: [

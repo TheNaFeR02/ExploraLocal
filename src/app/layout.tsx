@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
+import '@smastrom/react-rating/style.css'
+
+// To change DateTime to time ago.------------
+import TimeAgo from 'javascript-time-ago'
+import es from 'javascript-time-ago/locale/es'
+import { Button } from "@/components/ui/button";
+TimeAgo.addDefaultLocale(es)
+TimeAgo.addLocale(es)
+export const timeAgo = new TimeAgo('es-ES')
+// -------------------------------------------
 
 const work_sans = Work_Sans({ subsets: ["latin"] });
 
@@ -16,7 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={work_sans.className}>{children}</body>
+      <body className={work_sans.className}>{children}
+      </body>
     </html>
   );
 }

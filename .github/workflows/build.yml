@@ -31,6 +31,20 @@ jobs:
       # Step 3: Install dependencies
       - run: npm ci
 
+      # Step .: Playwright for E2E testing. Possibly eventually changed to a playwright.yml file
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+
+
       # Step 4: Build the project (if build script is present)
       - run: npm run build --if-present
 

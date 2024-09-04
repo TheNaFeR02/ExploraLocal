@@ -1,24 +1,44 @@
-import prisma from '../src/lib/prisma';
+import prisma from '../src/client';
 import { elPasoRobao } from '../src/utils/exampleData/elPasoRobao';
-// import { elPasoGrande } from '../src/utils/exampleData/pasoGrande'
+import { elPasoGrande } from '../src/utils/exampleData/pasoGrande'
+import { seedRents } from './seedRents';
+import { seedReviews } from './seedReviews';
+import { seedServices } from './seedServices';
 
 async function main() {
-  const newEntry = await prisma.object.create({
-    data: {
-      image: elPasoRobao.image,
-      title: elPasoRobao.title,
-      subtitle: elPasoRobao.subtitle,
-      description: elPasoRobao.description,
-      details: {
-        create: elPasoRobao.details,
-      },
-      frequentQuestions: {
-        create: elPasoRobao.frequentQuestions,
-      },
-    },
-  })
+  seedServices()
+  // seedReviews()
+  // seedRents()
+  // const newEntry = await prisma.object.create({
+  //   // data: {
+  //   //   slug: elPasoRobao.slug,
+  //   //   image: elPasoRobao.image,
+  //   //   title: elPasoRobao.title,
+  //   //   subtitle: elPasoRobao.subtitle,
+  //   //   description: elPasoRobao.description,
+  //   //   details: {
+  //   //     create: elPasoRobao.details,
+  //   //   },
+  //   //   frequentQuestions: {
+  //   //     create: elPasoRobao.frequentQuestions,
+  //   //   },
+  //   // },
+  //   data: {
+  //     slug: elPasoGrande.slug,
+  //     image: elPasoGrande.image,
+  //     title: elPasoGrande.title,
+  //     subtitle: elPasoGrande.subtitle,
+  //     description: elPasoGrande.description,
+  //     details:{
+  //       create: elPasoGrande.details,
+  //     },
+  //     frequentQuestions:{
+  //       create: elPasoGrande.frequentQuestions,
+  //     }
+  //   }
+  // })
 
-  console.log('New entry created:', newEntry);
+  // console.log('New entry created:', newEntry);
 }
 
 // Execute the main function and handle disconnection and errors

@@ -1,11 +1,10 @@
 import prisma from '@/lib/prisma'
-import Link from 'next/link'
-import Image from 'next/image'
-import { notFound } from 'next/navigation';
 import { Prisma } from '@prisma/client'
 import ObjectPage from '@/features/object/object'
+import { notFound } from 'next/navigation';
 
-const pasorobao = "/images/paso_robao.jpg"
+// Path example for images for development tests.
+// const pasorobao = '/images/paso_robao.jpg'
 
 export const dynamicParams = true;
 
@@ -15,15 +14,18 @@ export async function generateStaticParams() {
   const objects = await prisma.object.findMany({
     select: {
       id: true,
+      slug: true
     }
   })
   return objects.map((object) => ({
-    id: object.id.toString()
+    id: object.id.toString(),
+    slug: object.slug
   }))
 }
 
-export default async function Object({ params }: { params: { id: string } }) {
+export default async function Object({ params }: { params: { id: string, slug: string } }) {
 
+  const slug = params.slug
   const id = Number(params.id)
 
   if (isNaN(id)) return notFound()
@@ -37,7 +39,7 @@ export default async function Object({ params }: { params: { id: string } }) {
   })
     .then(object => {
       if (!object) return notFound()
-
+      if (object.slug !== slug) return notFound()
       return <ObjectPage object={object} />
     })
     .catch(e => {
