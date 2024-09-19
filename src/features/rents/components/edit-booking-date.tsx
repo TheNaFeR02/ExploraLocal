@@ -17,7 +17,7 @@ import { DateRange } from "react-day-picker";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function EditBookingDate({ bookings }: { bookings: RentBooking[] }) {
-  const [dateFromChild, setDateFromChild] = useState<DateRange | undefined>();
+  const [dateFromChild, setDateFromChild] = useState<DateRange | undefined>(undefined);
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -47,6 +47,15 @@ export default function EditBookingDate({ bookings }: { bookings: RentBooking[] 
     setDateFromChild(data);
   }
 
+  // If somebody else pass me a booking with dates already selected, then we shouldn't show Elegir días but the days already in the params.
+  useEffect(() => {
+    const from = searchParams.get('from')
+    const to = searchParams.get('to')
+    if (from && to)
+      setDateFromChild({ from: new Date(from), to: new Date(to) })
+  }, [])
+
+  // Every time we change the date on the calendar we need to update the query params on the url.
   useEffect(() => {
     handleUpdateQueryParams()
   }, [dateFromChild])
@@ -64,7 +73,7 @@ export default function EditBookingDate({ bookings }: { bookings: RentBooking[] 
   return (
     <div className='flex justify-between'>
       <div>
-        <p className='font-medium'>Fechas</p>
+        <p className='font-medium'>Fecha</p>
         {dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p>Elegir días</p>}
       </div>
       <div className="self-center">

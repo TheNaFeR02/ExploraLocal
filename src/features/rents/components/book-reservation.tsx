@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 
 import EditBookingDate from "./edit-booking-date"
 import EditGuests from "./edit-guests"
+import MercadoPagoBricks from "./mercadopago-brick"
+
 
 
 export default async function BookReservation({ bookings, rentId, numberOfDays }: { bookings: RentBooking[], rentId: number, numberOfDays: number }) {
@@ -54,11 +56,12 @@ export default async function BookReservation({ bookings, rentId, numberOfDays }
       <div className='flex gap-2 py-2'>
 
         <div className=''>
-          <Image className='rounded-sm'
+          <Image className='rounded-sm w-full h-auto'
             src={rent.profile_photo}
             alt={'foto'}
             width={120}
             height={120}
+            priority
           />
         </div>
         <div className='self-center'>
@@ -99,11 +102,16 @@ export default async function BookReservation({ bookings, rentId, numberOfDays }
 
       <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
 
-      <div className='pt-4'>
-        <h2 className='font-semibold pb-4'>Método de pago</h2>
-      </div>
-      
-
+      {total ? (
+        <MercadoPagoBricks total={total} />
+      ) : (
+        <>
+          <div className='pt-4'>
+            <h2 className='font-semibold pb-4'>Método de pago</h2>
+          </div>
+          <p>Seleccione los días de estadía</p>
+        </>
+      )}
 
     </div>
   )

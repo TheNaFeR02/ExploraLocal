@@ -12,6 +12,20 @@ TimeAgo.addLocale(es)
 export const timeAgo = new TimeAgo('es-ES')
 // -------------------------------------------
 
+import { initMercadoPago } from '@mercadopago/sdk-react';
+
+// Initialize MercadoPago
+try {
+  // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
+  initMercadoPago('TEST-e0ee2946-9643-4f8a-8f25-0a642b018393', {locale: 'es-CO'})
+  console.log("MercadoPago initialized successfully");
+} catch (error) {
+  console.error("Error initializing MercadoPago:", error);
+}
+
+
+
+
 const work_sans = Work_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
