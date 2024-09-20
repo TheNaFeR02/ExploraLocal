@@ -106,7 +106,9 @@ export default function RentPage({ rent }: { rent: RentWithRelations }) {
 
               <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
 
-              <h3 className="font-bold text-xl py-5">Servicios</h3>
+              <h3 className="font-bold text-xl mt-5 mb-3 ">Servicios</h3>
+
+                {rent.type === 'HOTEL' && <p className='mb-4 font-light italic'>Los servicios pueden variar dependiendo de la habitación.</p>}
               <div className='grid grid-cols-2 relative'>
                 {rent.services.slice(0, 14).map((service, index) => (
                   <div key={index}>
@@ -186,14 +188,19 @@ export default function RentPage({ rent }: { rent: RentWithRelations }) {
           </Tabs>
           <div className="flex items-center justify-between p-4 border-t fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50">
             <div>
-              <p className="text-lg font-bold">$998,817.17 x Noche</p>
-              <p className="text-sm text-muted-foreground">7-14 Jul</p>
+              {rent.type === 'APARTMENT' &&
+                <p className="text-lg font-bold">${rent.price.toLocaleString()} x Noche</p>
+              }
+              {rent.type === 'HOTEL' &&
+                <>
+                  <p className="text-lg font-bold">Seleccionar Habitación</p>
+                  <p className="text-sm text-muted-foreground">Descubre nuestras opciones de alojamiento.</p>
+                </>
+              }
             </div>
-            {/* <Button className="ml-auto">Reservar</Button> */}
             <Button asChild className="ml-auto">
               <Link href={`/rents/${rent.id}/${rent.slug}/booking`}>Reservar</Link>
             </Button>
-
           </div>
         </div>
 

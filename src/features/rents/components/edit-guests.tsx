@@ -20,8 +20,8 @@ export default function EditGuests() {
 
   return (
 
-        <div className='flex justify-between'>
-<div>
+    <div className='flex justify-between'>
+      <div>
         <p className='font-medium'>Huéspedes</p>
         <p>{adults} Adultos</p>
         {kids >= 1 && <p>{kids} Niños</p>}
@@ -74,8 +74,6 @@ export default function EditGuests() {
                       <span className="sr-only">Increase</span>
                     </Button>
                   </div>
-
-
 
                   <div>
                     {/* Kids */}
@@ -159,7 +157,7 @@ export default function EditGuests() {
           </DrawerContent>
         </Drawer>
       </div>
-        </div>
-      
+    </div>
+
   )
 }

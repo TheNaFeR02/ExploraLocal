@@ -68,9 +68,44 @@ model Rent {
   services      Service[]
   rules         String[]
   bookings      RentBooking[]
+  type          RentType      @default(HOTEL)
+  rooms         Room[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id    Int     @id @default(autoincrement())
+  icon  String?
+  name  String
+  rents Rent[]
+  rooms Room[]
+}
+
+model Room {
+  id          Int      @id @default(autoincrement())
+  rent        Rent     @relation(fields: [rentId], references: [id])
+  rentId      Int
+  name        String
+  single_bed  Int
+  queen_bed   Int
+  king_bed    Int
+  capacity    Int // Maximum number of people: adults & kids are considered people not babies, therefore in case the # of guess surpasses the capacity, we should put a warning but still let the person make the booking.
+  price       Float // Price per night
+  description String? // Optional description
+  amenities   Service[] // List of amenities (e.g., WiFi, TV, AC)
+  photos      String[] // URLs to room photos
+  rules       String[] // Specific rules for the room (e.g., no smoking)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+}
+
+enum RentType {
+  HOTEL
+  APARTMENT
+  PENSION
 }
 
 model Review {
@@ -91,13 +126,6 @@ model Review {
   // restaurantId
 
   @@index([reviewableId, reviewableType])
-}
-
-model Service {
-  id    Int     @id @default(autoincrement())
-  icon  String?
-  name  String
-  rents Rent[]
 }
 
 model RentBooking {

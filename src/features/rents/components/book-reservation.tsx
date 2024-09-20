@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import EditBookingDate from "./edit-booking-date"
 import EditGuests from "./edit-guests"
 import MercadoPagoBricks from "./mercadopago-brick"
+import SelectRoom from "./select-room"
 
 
 
@@ -24,6 +25,7 @@ export default async function BookReservation({ bookings, rentId, numberOfDays }
       name: true,
       profile_photo: true,
       price: true,
+      rooms: true,
     }
   })
     .catch(e => {
@@ -78,6 +80,15 @@ export default async function BookReservation({ bookings, rentId, numberOfDays }
       <div className='py-3'>
         <EditBookingDate bookings={bookings} />
         <EditGuests />
+      </div>
+
+      <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
+
+      <div className='pt-4'>
+        <h2 className='font-semibold pb-4'>Habitación</h2>
+      </div>
+      <div className='flex flex-col gap-[0.5px] pb-3'>
+        <SelectRoom rooms={rent.rooms}/>
       </div>
 
       <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
