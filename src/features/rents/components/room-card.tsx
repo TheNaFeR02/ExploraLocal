@@ -15,18 +15,88 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
+import {
+  DrawerClose,
+  DrawerFooter,
+} from "@/components/ui/drawer"
+
+
 import Icon from "@/utils/Icons"
 import { Room, Service } from "@prisma/client"
-import { useEffect, useState } from "react"
-
+import { useCallback, useEffect, useState, useContext } from "react"
 
 
 import prisma from '@/lib/prisma'
-import { ServicesIcons } from "../actions"
+import { roomSelected, ServicesIcons } from "../actions"
 import dynamicIconImports from "lucide-react/dynamicIconImports"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { myRoomWithBookingsAndServices } from "@/types/types"
+import { RoomContext } from "./booking-hotel-details"
 
-export default function RoomCard({ room, amenities }: { room: Room, amenities: Service[] }) {
+
+export default function RoomCard({
+  room,
+  // amenities, 
+  // callbackRoomName,
+  roomSelectedIndex
+}: {
+  room: myRoomWithBookingsAndServices,
+  // amenities: Service[], 
+  // callbackRoomName: (roomName: string) => void,
+  roomSelectedIndex: number
+}) {
   const [isOpen, setIsOpen] = useState(false)
+  const { roomSelected, updateRoomSelected } = useContext(RoomContext)
+
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+
+
+  const createQueryString = useCallback(
+    (params: Record<string, string>) => {
+      const searchParams = new URLSearchParams(window.location.search)
+      Object.keys(params).forEach(key => {
+        searchParams.set(key, params[key])
+      })
+      return searchParams.toString()
+    },
+    []
+  )
+
+
+
+  // const createQueryString = useCallback(
+  //   (name: string, value: string, paramsToDelete: string[]) => {
+  //     const params = new URLSearchParams(searchParams.toString())
+  //     params.set(name, value)
+
+  //     paramsToDelete.forEach(key => {
+  //       params.delete(key);
+  //     });
+
+  //     return params.toString()
+  //   },
+  //   [searchParams]
+  // )
+
+
+  // const createQueryString = useCallback(
+  //   (paramsToSet: { [key: string]: string }, paramsToDelete: string[] = []) => {
+  //     const params = new URLSearchParams(searchParams.toString());
+  //     Object.keys(paramsToSet).forEach(key => {
+  //       params.set(key, paramsToSet[key]);
+  //     });
+  //     paramsToDelete.forEach(key => {
+  //       params.delete(key);
+  //     });
+  //     return params.toString();
+  //   },
+  //   [searchParams]
+  // );
+
+
   // const [roomServices, setRoomServices] = useState<{ icon: string | null, name: string }[]>([])
 
   // Prepara los user icons que representan los número de personas.
@@ -36,12 +106,13 @@ export default function RoomCard({ room, amenities }: { room: Room, amenities: S
     icons.push(<Icon key={i} name="user" className="m-1" size={20} />);
   }
 
+  useEffect(() => {
+
+  }, [])
+
 
   return (
-
-
     <Card>
-
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
@@ -69,11 +140,11 @@ export default function RoomCard({ room, amenities }: { room: Room, amenities: S
 
             <CollapsibleContent className='m-0 p-0'>
               <div className='w-full'>
-                {amenities.length > 0 &&
+                {room.amenities.length > 0 &&
                   <>
                     <h2>Servicios</h2>
                     <div className='flex flex-wrap gap-2 gap-x-3 overflow-x-auto' >
-                      {amenities.map(({ icon, name }, index) => {
+                      {room.amenities.map(({ icon, name }, index) => {
                         { console.log("name", icon) }
                         return (
                           <div key={index} className='flex'>
@@ -100,16 +171,40 @@ export default function RoomCard({ room, amenities }: { room: Room, amenities: S
         <CardFooter className='block p-5'>
           <div className='flex justify-between'>
             <CollapsibleTrigger asChild>
-              <Button variant={'ghost'}>ver más <Icon name="chevrons-up-down" className="ml-2" size={13}></Icon></Button>
+              <Button
+                variant={'ghost'}>ver más <Icon name="chevrons-up-down" className="ml-2" size={13}></Icon></Button>
             </CollapsibleTrigger>
-            <Button>Seleccionar</Button>
+            {/* <DrawerFooter > */}
+            <DrawerClose asChild>
+              <Button
+                onClick={() => {
+
+                  // const updatedQueryString = createQueryString(
+                  //   { selectedRoomId: room.id.toString() },
+                  //   ['from', 'to']
+                  // );
+                  // router.push(`${pathname}?${updatedQueryString}`);
+                  // location.reload();
+
+                  // this!!!
+                  // callbackRoomName(room.name);
+                  // router.refresh()
+                  updateRoomSelected(room)
+                  router.push(pathname + '?' + createQueryString({ selectedRoomId: room.id.toString(), roomSelectedIndex: roomSelectedIndex.toString() }),)
+
+                }}
+              >Seleccionar</Button>
+
+            </DrawerClose>
+            {/* </DrawerFooter> */}
+
           </div>
         </CardFooter>
 
       </Collapsible>
 
 
-    </Card>
+    </Card >
 
 
   )

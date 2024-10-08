@@ -1,5 +1,5 @@
 "use client"
-import { RentBooking } from "@prisma/client";
+import { RentBooking, RentType } from "@prisma/client";
 import {
   Drawer,
   DrawerClose,
@@ -12,12 +12,16 @@ import {
 } from "@/components/ui/drawer"
 import CalendarRent from "./rent-calendar"
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { RoomContext } from "./booking-hotel-details";
 
-export default function EditBookingDate({ bookings }: { bookings: RentBooking[] }) {
+
+export default function EditBookingDate({ bookings, rentType }: { bookings: RentBooking[], rentType: RentType }) {
   const [dateFromChild, setDateFromChild] = useState<DateRange | undefined>(undefined);
+  const { roomSelected, updateRoomSelected } = useContext(RoomContext)
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -49,11 +53,30 @@ export default function EditBookingDate({ bookings }: { bookings: RentBooking[] 
 
   // If somebody else pass me a booking with dates already selected, then we shouldn't show Elegir días but the days already in the params.
   useEffect(() => {
+    console.log('EditBookingDate mounted')
+
+    // if rent type is a Hotel then we have to update the availability of the dates based on the rooms.
+    if (rentType === 'HOTEL') {
+      const selectedRoomId = searchParams.get('selectedRoomId')
+      if (!selectedRoomId) {
+        setDateFromChild(undefined)
+        return
+      }
+    }
+
     const from = searchParams.get('from')
     const to = searchParams.get('to')
     if (from && to)
       setDateFromChild({ from: new Date(from), to: new Date(to) })
+    else {
+      setDateFromChild(undefined)
+    }
   }, [])
+
+  useEffect(() => {
+    // console.log("actualizó")
+  })
+
 
   // Every time we change the date on the calendar we need to update the query params on the url.
   useEffect(() => {
@@ -74,14 +97,36 @@ export default function EditBookingDate({ bookings }: { bookings: RentBooking[] 
     <div className='flex justify-between'>
       <div>
         <p className='font-medium'>Fecha</p>
-        {dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p>Elegir días</p>}
+        {rentType === 'APARTMENT' && (
+          dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p>Elegir días</p>
+        )
+        }
+        {rentType === 'HOTEL' && !roomSelected ?
+          (
+            <p className='italic'>Seleccionar Habitación Primero</p>
+          ) : (
+            dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p className='italic'>Elegir días disponibles</p>
+          )
+        }
+
+        {/* {dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p>Elegir días</p>} */}
+
       </div>
       <div className="self-center">
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="link">
-              <span className='underline'>Cambiar</span>
-            </Button>
+
+            {rentType === 'HOTEL' && roomSelected &&
+              <Button variant="link">
+                <span className='underline'>Cambiar</span>
+              </Button>
+            }
+
+            {/* {rentType === 'APARTMENT' && 
+              <Button variant="link">
+                <span className='underline'>Cambiar</span>
+              </Button>
+            } */}
           </DrawerTrigger>
           <DrawerContent>
             <div className="mx-auto w-full max-w-sm">

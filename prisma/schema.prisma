@@ -84,8 +84,8 @@ model Service {
 }
 
 model Room {
-  id          Int      @id @default(autoincrement())
-  rent        Rent     @relation(fields: [rentId], references: [id])
+  id          Int           @id @default(autoincrement())
+  rent        Rent          @relation(fields: [rentId], references: [id])
   rentId      Int
   name        String
   single_bed  Int
@@ -97,9 +97,9 @@ model Room {
   amenities   Service[] // List of amenities (e.g., WiFi, TV, AC)
   photos      String[] // URLs to room photos
   rules       String[] // Specific rules for the room (e.g., no smoking)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  bookings    RentBooking[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 enum RentType {
@@ -134,8 +134,10 @@ model RentBooking {
   to     DateTime
   User   User?    @relation(fields: [userId], references: [id])
   userId Int?
-  Rent   Rent     @relation(fields: [rentId], references: [id])
+  Rent   Rent    @relation(fields: [rentId], references: [id])
   rentId Int
+  Room   Room?    @relation(fields: [roomId], references: [id])
+  roomId Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

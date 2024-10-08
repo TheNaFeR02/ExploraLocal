@@ -3,30 +3,32 @@ import prisma from '@/lib/prisma'
 import BookReservation from "@/features/rents/components/book-reservation"
 import { Prisma } from '@prisma/client'
 import calculateNumberOfDays from "@/utils/calculateNumberOfDays"
+import BookHotelReservation from "@/features/rents/components/book-hotel-reservation"
+import { rentWithRoomsAndBookingsSelect } from "@/types/types"
 
 
-export default function BookingRent({ params, searchParams }: { params: { id: string, slug: string }, searchParams?: { from?: string, to?: string, selectedRoomId?: string } }) {
+export default async function HotelBookings(
+  {
+    params,
+    searchParams
+  }: {
+    params: { id: string, slug: string },
+    searchParams?: { from?: string, to?: string, selectedRoomId?: string }
+  }) {
   const slug = params.slug
   const id = Number(params.id)
 
   if (isNaN(id)) return notFound()
 
-  return prisma.rentBooking.findMany({
-    where: {
-      AND: {
-        rentId: id,
-        from: {
-          gte: new Date() // Fetching the occupied bookings from today, old ones should be dismissed.
-        }
-      }
-    }
+  return prisma.rent.findUnique({
+    where: { id: id },
+    select: rentWithRoomsAndBookingsSelect,
   })
-    .then(bookings => {
+    .then(rent => {
       // Calculate the number of days between 'from' and 'to'
       const numberOfDays = calculateNumberOfDays(searchParams?.from, searchParams?.to);
-
       // console.log("params url", searchParams)
-      return <BookReservation bookings={bookings} rentId={id} numberOfDays={numberOfDays} selectedRoomId={searchParams?.selectedRoomId} />
+      return rent ? <BookHotelReservation rentWithRoomAndBookings={rent} numberOfDays={numberOfDays} /> : <div>Reserva no encontrada</div>
     })
     .catch(e => {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -41,4 +43,6 @@ export default function BookingRent({ params, searchParams }: { params: { id: st
       } else console.log("unknown prisma error trying to find the rent:", e)
       return notFound();
     });
+
+
 }

@@ -1,4 +1,4 @@
-// 'use client'
+'use client'
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -12,41 +12,40 @@ import {
 } from "@/components/ui/drawer"
 import { Room } from "@prisma/client"
 import RoomList from "./room-list"
+import RoomCard from "./room-card"
+import { Prisma, RentBooking, Service } from "@prisma/client"
+import prisma from '@/lib/prisma'
+import { myRoomWithBookingsAndServices } from "@/types/types"
 
 
-export default function SelectRoom({ rooms }: { rooms: Room[] }) {
-  
-  
+
+
+export default function SelectRoom(
+  { rooms, 
+    // nameOfRoomSelected
+  }: {
+    rooms: myRoomWithBookingsAndServices[], 
+    // nameOfRoomSelected?: string
+  }) {
+
+  // const roomAmenities = await prisma.room.findMany({
+  //   select: {
+  //     id: true,
+  //     amenities: true,
+  //   }
+  // })
+
+  // // Create a hash map for room amenities
+  // const amenitiesMap: { [key: number]: Service[] } = {};
+  // rooms.forEach(room => {
+  //   amenitiesMap[room.id] = room.amenities;
+  // });
+
+
+
   return (
-    <div className='flex justify-between'>
-      <div className="">
-        <p>Suite Deluxe - Principal</p>
-        <p></p>
-      </div>
-      <div className="">
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="link">
-              <span className='underline'>Cambiar</span>
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Habitaciones</DrawerTitle>
-              <DrawerDescription>Selecciona sobre las habitaciones disponibles</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-
-              {/* Room */}
-              <RoomList rooms={rooms}/>
-
-              {/* <DrawerClose asChild>
-                <Button className="my-6">Cerrar</Button>
-              </DrawerClose> */}
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </div>
-    </div>
+    <RoomList rooms={rooms} 
+    // amenitiesMap={amenitiesMap} 
+    />
   )
 }

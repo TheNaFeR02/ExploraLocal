@@ -8,6 +8,11 @@ import dynamicIconImports from 'lucide-react/dynamicIconImports'
 
 import { Prisma } from "@prisma/client"
 
+export async function roomSelected() {  
+
+}
+
+
 export async function ServicesIcons(roomId: number): Promise<{ icon: string | null, name: string }[] | null> {
   console.log("Corrió en el server")
   return await prisma.room.findUnique({
@@ -53,3 +58,4 @@ export async function ServicesIcons(roomId: number): Promise<{ icon: string | nu
     })
 
 }
+

@@ -11,19 +11,56 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Minus, Plus } from "lucide-react"
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export default function EditGuests() {
-  const [adults, setAdults] = useState(2)
+  const [adults, setAdults] = useState(0)
   const [kids, setKids] = useState(0)
   const [babies, setBabies] = useState(0)
+
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const createQueryString = useCallback(
+    (params: Record<string, string>) => {
+      const searchParams = new URLSearchParams(window.location.search)
+      Object.keys(params).forEach(key => {
+        searchParams.set(key, params[key])
+      })
+      return searchParams.toString()
+    },
+    []
+  )
+
+  useEffect(() => {
+    console.log("EditGuests mounted")
+    const adults = searchParams.get('adults')
+    const kids = searchParams.get('kids')
+    const babies = searchParams.get('babies')
+    if (adults && kids && babies) {
+      const adults_ = Number(adults)
+      if (!isNaN(adults_)) setAdults(adults_)
+      const kids_ = Number(kids)
+      if (!isNaN(kids_)) setKids(kids_)
+      const babies_ = Number(babies)
+      if (!isNaN(babies_)) setBabies(babies_)
+    } else {
+      router.push(pathname + '?' + createQueryString({ adults: '2', kids: '0', babies: '0' }))
+      setAdults(2)
+    }
+  }, [])
 
   return (
 
     <div className='flex justify-between'>
       <div>
         <p className='font-medium'>Huéspedes</p>
-        <p>{adults} Adultos</p>
+
+        {adults == 0 && kids == 0 && babies == 0 && <p>Elejir huéspedes</p>}
+
+        {adults >= 1 && <p>{adults} Adultos</p>}
         {kids >= 1 && <p>{kids} Niños</p>}
         {babies >= 1 && <p>{babies} Bebés</p>}
       </div>
@@ -150,7 +187,11 @@ export default function EditGuests() {
               <DrawerFooter>
                 {/* <Button>Submit</Button> */}
                 <DrawerClose asChild>
-                  <Button className="my-6">Cerrar</Button>
+                  <Button className="my-6"
+                    onClick={() => {
+                      router.push(pathname + '?' + createQueryString({ adults: adults.toString(), kids: kids.toString(), babies: babies.toString() }))
+                    }}
+                  >Confirmar</Button>
                 </DrawerClose>
               </DrawerFooter>
             </div>
