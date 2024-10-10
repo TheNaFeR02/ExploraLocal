@@ -38,7 +38,6 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
   )
 
   const handleUpdateQueryParams = () => {
-
     if (dateFromChild && dateFromChild.from && dateFromChild.to) {
       const fromDate = dateFromChild.from.toISOString().split('T')[0]
       const toDate = dateFromChild.to.toISOString().split('T')[0]
@@ -74,7 +73,7 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
   }, [])
 
   useEffect(() => {
-    // console.log("actualizó")
+    console.log("actualizó")
   })
 
 
@@ -98,16 +97,16 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
       <div>
         <p className='font-medium'>Fecha</p>
         {rentType === 'APARTMENT' && (
-          dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p>Elegir días</p>
+          dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p className='italic'>Elegir días</p>
         )
         }
-        {rentType === 'HOTEL' && !roomSelected ?
+        {rentType === 'HOTEL' && (!roomSelected ?
           (
             <p className='italic'>Seleccionar Habitación Primero</p>
           ) : (
             dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p className='italic'>Elegir días disponibles</p>
           )
-        }
+        )}
 
         {/* {dateFromChild ? <p>{formatDateRange(dateFromChild)}</p> : <p>Elegir días</p>} */}
 
@@ -116,10 +115,10 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
         <Drawer>
           <DrawerTrigger asChild>
 
-            {rentType === 'HOTEL' && roomSelected &&
+            {((rentType === 'HOTEL' && roomSelected !== undefined) || rentType === 'APARTMENT') && (
               <Button variant="link">
                 <span className='underline'>Cambiar</span>
-              </Button>
+              </Button>)
             }
 
             {/* {rentType === 'APARTMENT' && 

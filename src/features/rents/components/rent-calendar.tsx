@@ -38,7 +38,10 @@ export default function CalendarRent({ bookings, sendDataToParent }: { bookings:
         selected={date}
         onSelect={setDate}
         className="rounded-md border"
-        disabled={disabledDates}
+        disabled={[
+          { from: new Date(0), to: new Date() }, // disables the past days.
+          ...disabledDates // disable the already booked rooms.
+        ]}
       />
       <div className='py-4 flex flex-col w-3/4 mx-auto gap-3'>
         {/* <Button onClick={handleClick}>Confirmar</Button>

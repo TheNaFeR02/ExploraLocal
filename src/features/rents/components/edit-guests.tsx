@@ -14,7 +14,9 @@ import { Minus, Plus } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-export default function EditGuests() {
+export default function EditGuests(
+  { capacity }: { capacity: number }
+) {
   const [adults, setAdults] = useState(0)
   const [kids, setKids] = useState(0)
   const [babies, setBabies] = useState(0)
@@ -57,8 +59,8 @@ export default function EditGuests() {
     <div className='flex justify-between'>
       <div>
         <p className='font-medium'>Huéspedes</p>
-
-        {adults == 0 && kids == 0 && babies == 0 && <p>Elejir huéspedes</p>}
+        {capacity && adults + kids > capacity && (<p className='text-red-500 text-sm italic'>Núm. personas recomendadas ({capacity})</p>)}
+          { adults == 0 && kids == 0 && babies == 0 && <p>Elejir huéspedes</p>}
 
         {adults >= 1 && <p>{adults} Adultos</p>}
         {kids >= 1 && <p>{kids} Niños</p>}
@@ -75,7 +77,7 @@ export default function EditGuests() {
             <div className="mx-auto w-full max-w-sm">
               <DrawerHeader>
                 <DrawerTitle>Huéspedes</DrawerTitle>
-                <DrawerDescription>Selecciona el número de huéspedes</DrawerDescription>
+                <DrawerDescription>Selecciona el número de huéspedes {capacity && adults + kids > capacity && (<><br /> <span className='text-red-500 '>Recordar que la capacidad máxima recomendada para la habitación es de {capacity} personas</span></>)}</DrawerDescription>
               </DrawerHeader>
 
               <div className="p-4 pb-0">

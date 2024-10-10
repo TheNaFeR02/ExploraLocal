@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import RoomList from "./room-list";
 import { createContext } from "react"
 import { RentBooking } from "@prisma/client";
+import MercadoPagoBricks from "./mercadopago-brick";
 
 interface RoomContextType {
   roomSelected?: myRoomWithBookingsAndServices;
@@ -58,7 +59,7 @@ export default function BookingHotelDetails({
         </div>
         <div className='py-3'>
           <EditBookingDate bookings={roomSelected?.bookings as RentBooking[]} rentType={"HOTEL"} />
-          <EditGuests />
+          <EditGuests capacity={roomSelected?.capacity || 0}/>
         </div>
 
         <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
@@ -84,9 +85,17 @@ export default function BookingHotelDetails({
         </div>
 
         <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
-
+        {total ? (
+          <MercadoPagoBricks total={total} />
+        ) : (
+          <>
+            <div className='pt-4'>
+              <h2 className='font-semibold pb-4'>Método de pago</h2>
+            </div>
+            <p>Seleccione los días de estadía</p>
+          </>
+        )}
       </RoomContext.Provider>
-
     </>
   )
 }

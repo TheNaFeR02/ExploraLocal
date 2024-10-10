@@ -70,6 +70,7 @@ model Rent {
   bookings      RentBooking[]
   type          RentType      @default(HOTEL)
   rooms         Room[]
+  capacity      Int? // In case is a hotel, then ignore, since the room capacity will be the one.
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

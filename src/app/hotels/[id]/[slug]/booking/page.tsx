@@ -21,7 +21,7 @@ export default async function HotelBookings(
   if (isNaN(id)) return notFound()
 
   return prisma.rent.findUnique({
-    where: { id: id },
+    where: { id: id, type: 'HOTEL' },
     select: rentWithRoomsAndBookingsSelect,
   })
     .then(rent => {
