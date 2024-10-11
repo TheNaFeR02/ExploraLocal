@@ -59,7 +59,7 @@ POSTGRES_DATABASE="************"
 
 
 ## deploy
-- [x] Build errors fixed: useCallback and useMemo distinction. Hooks properly setted ups.
+- [x] Build errors fixed: useCallback and useMemo distinction. Hooks properly setted up.
 - [x] Page deployed on Vercel.
 - [x] Database created. 
 - [x] Database linked to project
