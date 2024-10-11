@@ -20,6 +20,50 @@ payload seems to not be too large. update params seem to be working relatilavey 
 
 - [ ] refactor some code: Code for hotel that s not necessary anymore on book-reservation (apartments only now).
 
+```
+## Current setup: To run project completely local.
+- local database: Run database on Docker desktop
+- The database connection is through prisma.
+
+./prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+./.env.development.local
+DATABASE_URL='postgresql://postgres:mysecretpassword@localhost:5432/postgres'
+...
+
+## Deployed: To run on vercel
+
+
+./prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+- Database env variables:
+POSTGRES_URL="************"
+POSTGRES_PRISMA_URL="************"
+POSTGRES_URL_NO_SSL="************"
+POSTGRES_URL_NON_POOLING="************"
+POSTGRES_USER="************"
+POSTGRES_HOST="************"
+POSTGRES_PASSWORD="************"
+POSTGRES_DATABASE="************"
+
+
+```
+
 
 ## deploy
-- [ ] 
+- [x] Build errors fixed: useCallback and useMemo distinction. Hooks properly setted ups.
+- [x] Page deployed on Vercel.
+- [x] Database created. 
+- [x] Database linked to project
+- [x] Prisma studio editing now on top of remote postgres database.
+- [x] Using uploadthings (free tier up to 2gbs) for images and files.
+- [ ] Delete assets from public. At taking into account for build and slow things.
