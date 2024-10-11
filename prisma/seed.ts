@@ -1,7 +1,7 @@
 import prisma from '../src/client';
 import { elPasoRobao } from '../src/utils/exampleData/elPasoRobao';
 import { elPasoGrande } from '../src/utils/exampleData/pasoGrande'
-import { seedRents } from './seedRents';
+// import { seedRents } from './seedRents';
 import { seedReviews } from './seedReviews';
 import { seedServices } from './seedServices';
 

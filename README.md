@@ -19,3 +19,7 @@ payload seems to not be too large. update params seem to be working relatilavey 
 - [ ] Once the payment is completed show a screen with the information of the booking.
 
 - [ ] refactor some code: Code for hotel that s not necessary anymore on book-reservation (apartments only now).
+
+
+## deploy
+- [ ] 

@@ -1,9 +1,9 @@
-import { timeAgo } from "@/app/layout";
 import { Rating } from "@/components/Rating";
 import { Progress } from "@/components/ui/progress";
 import prisma from "@/lib/prisma"
 import ReactTimeAgo from 'react-time-ago'
 import { Rating as ReactRating } from '@smastrom/react-rating'
+import timeAgo from "@/utils/timeAgo";
 
 
 export default async function RentReviews({ rentId }: { rentId: number }) {

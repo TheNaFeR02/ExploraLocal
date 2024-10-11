@@ -59,7 +59,7 @@ export default function RoomList(
     if (roomSelectedIndex && !isNaN(index))
       updateRoomSelected(rooms[index])
       // setSelectedRoom(rooms[index].name)
-  }, [])
+  }, [searchParams, roomSelected, updateRoomSelected, rooms])
 
 
   return (<>

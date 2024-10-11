@@ -51,7 +51,7 @@ export default function EditGuests(
       router.push(pathname + '?' + createQueryString({ adults: '2', kids: '0', babies: '0' }))
       setAdults(2)
     }
-  }, [])
+  }, [searchParams, createQueryString, router, pathname])
 
   return (
 

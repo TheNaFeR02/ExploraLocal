@@ -37,14 +37,14 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
     []
   )
 
-  const handleUpdateQueryParams = () => {
-    if (dateFromChild && dateFromChild.from && dateFromChild.to) {
-      const fromDate = dateFromChild.from.toISOString().split('T')[0]
-      const toDate = dateFromChild.to.toISOString().split('T')[0]
-      console.log("fromdate and todate", fromDate, toDate)
-      router.push(pathname + '?' + createQueryString({ from: fromDate, to: toDate }))
-    }
+  const handleUpdateQueryParams = useCallback(() => {
+  if (dateFromChild && dateFromChild.from && dateFromChild.to) {
+    const fromDate = dateFromChild.from.toISOString().split('T')[0];
+    const toDate = dateFromChild.to.toISOString().split('T')[0];
+    console.log("fromdate and todate", fromDate, toDate);
+    router.push(pathname + '?' + createQueryString({ from: fromDate, to: toDate }));
   }
+}, [dateFromChild, createQueryString, pathname, router]);
 
   function handleDataFromChild(data: DateRange | undefined) {
     setDateFromChild(data);
@@ -52,7 +52,6 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
 
   // If somebody else pass me a booking with dates already selected, then we shouldn't show Elegir días but the days already in the params.
   useEffect(() => {
-    console.log('EditBookingDate mounted')
 
     // if rent type is a Hotel then we have to update the availability of the dates based on the rooms.
     if (rentType === 'HOTEL') {
@@ -70,17 +69,14 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
     else {
       setDateFromChild(undefined)
     }
-  }, [])
+  }, [rentType, searchParams])
 
-  useEffect(() => {
-    console.log("actualizó")
-  })
 
 
   // Every time we change the date on the calendar we need to update the query params on the url.
   useEffect(() => {
     handleUpdateQueryParams()
-  }, [dateFromChild])
+  }, [dateFromChild, handleUpdateQueryParams])
 
   function formatDateRange(dateRange: DateRange | undefined): string {
     if (!dateRange || !dateRange.from || !dateRange.to) return "Elegir días";
