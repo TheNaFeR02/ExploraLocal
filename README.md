@@ -6,15 +6,6 @@ payload seems to not be too large. update params seem to be working relatilavey 
 - [x] Make sure Habitación section is not appearing
 - [x] Make sure price dates are being filtered.
 - [x] Make sure price is adjusting according to the dates.
-- [ ] 
-
-
-- [ ] If there's no roomId (no room selected) when selecting the room, delete date queryparam to choose another date.
-- [ ] If there's a roomId, It should be find within the list of rooms to adjust the price
-- [ ] Deploy 
-- [ ] Test real paid for hotel, make sure to create booking once the payment has been confirmed.
-- [ ]
-
 
 
 ~25mins: Bookings dates adjusting depending on Room selected.
@@ -22,7 +13,7 @@ payload seems to not be too large. update params seem to be working relatilavey 
 - [x] Check Apartment reservation still functioning
 // validation
 - [x] Validate that a disable day can't be included in the date range.
-- [x] Past days are being disabled
+- [x] Past days are being disabled 
 - [x] Make a warning if the number of people exceed the max capacity.
 - [x] Block the payment until all the validations are exceeded.
 - [ ] Once the payment is completed show a screen with the information of the booking.

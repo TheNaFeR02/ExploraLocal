@@ -37,7 +37,6 @@ export default function EditGuests(
   )
 
   useEffect(() => {
-    console.log("EditGuests mounted")
     const adults = searchParams.get('adults')
     const kids = searchParams.get('kids')
     const babies = searchParams.get('babies')
@@ -59,8 +58,8 @@ export default function EditGuests(
     <div className='flex justify-between'>
       <div>
         <p className='font-medium'>Huéspedes</p>
-        {capacity && adults + kids > capacity && (<p className='text-red-500 text-sm italic'>Núm. personas recomendadas ({capacity})</p>)}
-          { adults == 0 && kids == 0 && babies == 0 && <p>Elejir huéspedes</p>}
+        {capacity !== 0 && adults + kids > capacity && (<p className='text-red-500 text-sm italic'>Núm. personas recomendadas ({capacity})</p>)}
+        {adults == 0 && kids == 0 && babies == 0 && <p>Elejir huéspedes</p>}
 
         {adults >= 1 && <p>{adults} Adultos</p>}
         {kids >= 1 && <p>{kids} Niños</p>}
@@ -77,7 +76,7 @@ export default function EditGuests(
             <div className="mx-auto w-full max-w-sm">
               <DrawerHeader>
                 <DrawerTitle>Huéspedes</DrawerTitle>
-                <DrawerDescription>Selecciona el número de huéspedes {capacity && adults + kids > capacity && (<><br /> <span className='text-red-500 '>Recordar que la capacidad máxima recomendada para la habitación es de {capacity} personas</span></>)}</DrawerDescription>
+                <DrawerDescription>Selecciona el número de huéspedes {capacity !== 0 && adults + kids > capacity && (<><br /> <span className='text-red-500 '>Recordar que la capacidad máxima recomendada para la habitación es de {capacity} personas</span></>)}</DrawerDescription>
               </DrawerHeader>
 
               <div className="p-4 pb-0">
