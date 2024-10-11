@@ -1,6 +1,5 @@
 # To Do
 
-payload seems to not be too large. update params seem to be working relatilavey quickly and also. Try to do it that way then work it out or optimize from there.
 
 - [x] Change current instance for an Apt type
 - [x] Make sure Habitación section is not appearing
