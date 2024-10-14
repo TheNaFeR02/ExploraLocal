@@ -92,8 +92,9 @@ export default function RentPage({ rent }: { rent: RentWithRelations }) {
 
               <div className='relative max-h-52 overflow-y-auto scroll-auto'>
 
-                <p className='pb-5  '>{rent.description}
-                </p>
+                <pre className='pb-5  '>
+                  {rent.description}
+                </pre>
               </div>
 
               {/* <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
