@@ -1,6 +1,5 @@
 # To Do
 
-payload seems to not be too large. update params seem to be working relatilavey quickly and also. Try to do it that way then work it out or optimize from there.
 
 - [x] Change current instance for an Apt type
 - [x] Make sure Habitación section is not appearing
@@ -63,13 +62,14 @@ POSTGRES_DATABASE="************"
 
 
 ## deploy
-- [x] Build errors fixed: useCallback and useMemo distinction. Hooks properly setted ups.
+- [x] Build errors fixed: useCallback and useMemo distinction. Hooks properly setted up.
 - [x] Page deployed on Vercel.
 - [x] Database created. 
 - [x] Database linked to project
 - [x] Prisma studio editing now on top of remote postgres database.
 - [x] Using uploadthings (free tier up to 2gbs) for images and files.
 - [x] Delete assets from public. At taking into account for build and slow things.
+
 - [x] leave the POSTGRES credentials on a env.production.local
 - [x] leave DATABASE_URL on .env.development.local.
 - [x] test to run both environments, the local db and vercel db
