@@ -7,13 +7,13 @@ import { initMercadoPago } from '@mercadopago/sdk-react';
 // Initialize MercadoPago
 try {
   // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
+  // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
+  console.log(process.env.PUBLIC_KEY_MERCADOPAGO)
   initMercadoPago('TEST-e0ee2946-9643-4f8a-8f25-0a642b018393', {locale: 'es-CO'})
   console.log("MercadoPago initialized successfully");
 } catch (error) {
   console.error("Error initializing MercadoPago:", error);
 }
-
-
 
 
 const work_sans = Work_Sans({ subsets: ["latin"] });
@@ -30,7 +30,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={work_sans.className}>{children}
+      <body className={work_sans.className}>
+        {children}
       </body>
     </html>
   );
