@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
           additional_info: {
             ip_address: ip
           },
-          callback_url: '/' // TODO: Change to follow workflow. It works when: 'Regresar al sitio de Comercio, '
+          callback_url: process.env.NEXT_PUBLIC_API_ENDPOINT // TODO: Change to follow workflow. It works when: 'Regresar al sitio de Comercio, '
         },
         requestOptions: {
           idempotencyKey: idempotencyKey
