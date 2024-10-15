@@ -44,7 +44,7 @@ export default async function BookReservation({ bookings, rentId, numberOfDays, 
 
   if (!rent) return <p>Error uploading the rent.</p>
 
-  if(rent.type !== "APARTMENT") return <p>Reserva no encontrada</p>
+  if (rent.type !== "APARTMENT") return <p>Reserva no encontrada</p>
 
   // name of the room selected
   const roomSelected = rent.rooms.find((room) => room.id.toString() === selectedRoomId)
@@ -102,7 +102,7 @@ export default async function BookReservation({ bookings, rentId, numberOfDays, 
           </div>
           <div className='py-3'>
             <EditBookingDate bookings={bookings} rentType={rent.type} />
-            <EditGuests capacity={rent.capacity || 0}/>
+            <EditGuests capacity={rent.capacity || 0} />
           </div>
         </>
       )}
@@ -167,12 +167,7 @@ export default async function BookReservation({ bookings, rentId, numberOfDays, 
       )} */}
 
       {total ? (
-        <MercadoPagoBricks total={total} items={[{
-          id: "",
-          title: "",
-          quantity: 0,
-          unit_price: 0
-        }]}/>
+        <MercadoPagoBricks total={total} description={rent.name} />
       ) : (
         <>
           <div className='pt-4'>

@@ -86,9 +86,7 @@ export default function BookingHotelDetails({
 
         <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
         {total ? (
-          <MercadoPagoBricks total={total}
-            items={[{ id: roomSelected?.id.toString() || '', quantity: 1, unit_price: total, picture_url: rentWithRoomAndBookings.profile_photo, title: roomSelected?.name || '' }]}
-          />
+          <MercadoPagoBricks total={total} description={roomSelected?.name || rentWithRoomAndBookings.name} />
         ) : (
           <>
             <div className='pt-4'>

@@ -4,7 +4,7 @@ import { StatusScreen } from "@mercadopago/sdk-react";
 import Link from "next/link";
 import { useParams, useRouter } from 'next/navigation'
 
-
+// server?
 export default function PaymentStatusPage() {
   const params = useParams<{ payment_id: string }>()
   const router = useRouter()
@@ -23,10 +23,8 @@ export default function PaymentStatusPage() {
           {/* TODO: REGRESAR A LA LISTA DE ARRIENDOS HECHOS POR EL USUARIO, ORGANIZADOS POR MÁS RECIENTES. 
           TODO: La card del booking ha de hacer un get a la reserva hecha por el usuario con su información.
           */}
+          {/*  */}
           <Button onClick={() => router.push("/")}>Regresar a la página</Button>
-          {/* <Button asChild>
-            <Link href="/login">Regresar a la página</Link>
-          </Button> */}
 
         </div>
       </div>

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       const response = await payment.create({
         body: {
           transaction_amount: formData.transaction_amount,
-          description: '<DESCRIPTION>',
+          description: formData.description,
           payment_method_id: formData.payment_method_id,
           payer: {
             email: formData.payer.email,
@@ -50,21 +50,12 @@ export async function POST(request: NextRequest) {
       body: {
         token: formData.token,
         transaction_amount: formData.transaction_amount,
-        // description: '<DESCRIPTION>',
+        description: formData.description,
         payment_method_id: formData.payment_method_id,
         payer: {
           email: formData.payer.email
         },
         installments: formData.installments,
-        additional_info: {
-          items: formData.items.map((item: any) => ({
-            picture_url: item.picture_url || '',
-            id: item.id || '',
-            title: item.title || '',
-            quantity: item.quantity || 0,
-            unit_price: item.unit_price || 0
-          }))
-        }
       },
     })
     // .then(console.log).catch(console.log);

@@ -24,7 +24,7 @@ import { Items } from 'mercadopago/dist/clients/commonTypes';
 
 
 
-export default function MercadoPagoBricks({ total, items }: { total: number, items: Items[] }) {
+export default function MercadoPagoBricks({ total, description }: { total: number, description: string }) {
   const [psePaymentStatusId, setPsePaymentStatusId] = useState<undefined | string>(undefined)
   const router = useRouter()
 
@@ -48,7 +48,7 @@ export default function MercadoPagoBricks({ total, items }: { total: number, ite
     { selectedPaymentMethod, formData }: { selectedPaymentMethod: any, formData: any }
   ) => {
     // Add items to formData
-    formData.items = items;
+    formData.description = description;
 
 
     // callback llamado al hacer clic en el botón enviar datos
