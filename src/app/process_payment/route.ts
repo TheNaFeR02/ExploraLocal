@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
+import { v4 as uuidv4 } from 'uuid';
 import mercadopago from "mercadopago"
 import { Items } from 'mercadopago/dist/clients/commonTypes'
 
@@ -18,6 +19,9 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.json()
     console.log(formData)
+
+    // Generar un UUID V4 para idempotencyKey
+    const idempotencyKey = uuidv4();
 
     // PSE payment
     if (formData.payment_method_id === 'pse') {
@@ -38,7 +42,7 @@ export async function POST(request: NextRequest) {
           callback_url: '/' // TODO: Change to follow workflow. It works when: 'Regresar al sitio de Comercio, '
         },
         requestOptions: {
-          idempotencyKey: 'edf'
+          idempotencyKey: idempotencyKey
         }
       })
 
