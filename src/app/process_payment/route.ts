@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         },
         installments: formData.installments,
         additional_info: {
-          items: formData.items.map(({ item }: { item: Items }) => ({
+          items: formData.items.map((item: any) => ({
             picture_url: item.picture_url || '',
             id: item.id || '',
             title: item.title || '',
