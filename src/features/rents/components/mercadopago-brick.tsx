@@ -20,11 +20,11 @@ import { useState } from 'react';
 import PaymentStatusScreen from './payment-status-screen';
 
 import { useRouter } from 'next/navigation'
+import { Items } from 'mercadopago/dist/clients/commonTypes';
 
 
 
-
-export default function MercadoPagoBricks({ total }: { total: number }) {
+export default function MercadoPagoBricks({ total, items }: { total: number, items: Items[] }) {
   const [psePaymentStatusId, setPsePaymentStatusId] = useState<undefined | string>(undefined)
   const router = useRouter()
 
@@ -47,6 +47,10 @@ export default function MercadoPagoBricks({ total }: { total: number }) {
   const onSubmit = async (
     { selectedPaymentMethod, formData }: { selectedPaymentMethod: any, formData: any }
   ) => {
+    // Add items to formData
+    formData.items = items;
+
+
     // callback llamado al hacer clic en el botón enviar datos
     return new Promise((resolve: any, reject) => {
       fetch("/process_payment", {

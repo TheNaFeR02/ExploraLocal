@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 import mercadopago from "mercadopago"
+import { Items } from 'mercadopago/dist/clients/commonTypes'
 
 
 
@@ -49,19 +50,28 @@ export async function POST(request: NextRequest) {
       body: {
         token: formData.token,
         transaction_amount: formData.transaction_amount,
-        description: '<DESCRIPTION>',
+        // description: '<DESCRIPTION>',
         payment_method_id: formData.payment_method_id,
         payer: {
           email: formData.payer.email
         },
         installments: formData.installments,
+        additional_info: {
+          items: formData.items.map(({ item }: { item: Items }) => ({
+            picture_url: item.picture_url || '',
+            id: item.id || '',
+            title: item.title || '',
+            quantity: item.quantity || 0,
+            unit_price: item.unit_price || 0
+          }))
+        }
       },
     })
     // .then(console.log).catch(console.log);
 
     console.log(response)
 
-    return new Response(JSON.stringify({response}), { status: 200 })
+    return new Response(JSON.stringify({ response }), { status: 200 })
   } catch (error) {
     console.error('Error creating payment:', error)
     return new Response(JSON.stringify({ error: 'Error creating payment' }), { status: 500 })

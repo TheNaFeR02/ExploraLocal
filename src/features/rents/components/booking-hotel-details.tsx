@@ -59,7 +59,7 @@ export default function BookingHotelDetails({
         </div>
         <div className='py-3'>
           <EditBookingDate bookings={roomSelected?.bookings as RentBooking[]} rentType={"HOTEL"} />
-          <EditGuests capacity={roomSelected?.capacity || 0}/>
+          <EditGuests capacity={roomSelected?.capacity || 0} />
         </div>
 
         <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
@@ -86,7 +86,9 @@ export default function BookingHotelDetails({
 
         <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
         {total ? (
-          <MercadoPagoBricks total={total} />
+          <MercadoPagoBricks total={total}
+            items={[{ id: roomSelected?.id.toString() || '', quantity: 1, unit_price: total, picture_url: rentWithRoomAndBookings.profile_photo, title: roomSelected?.name || '' }]}
+          />
         ) : (
           <>
             <div className='pt-4'>
