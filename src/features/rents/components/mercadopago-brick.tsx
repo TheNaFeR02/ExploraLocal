@@ -59,7 +59,7 @@ export default function MercadoPagoBricks({ total }: { total: number }) {
         .then(async (response) => response.json())
         .then(({ response }) => {
           // recibir el resultado del pago
-          router.push(`/status_payment/${response.id}`) // page that paints the statusbrick with the id of the payment
+          router.push(`/status_payment/${response.id}/`) // page that paints the statusbrick with the id of the payment
           resolve();
         })
         .catch((error) => {

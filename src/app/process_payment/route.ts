@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
           additional_info: {
             ip_address: ip
           },
-          callback_url: 'https://google.com'
+          callback_url: '/' // TODO: Change to follow workflow. It works when: 'Regresar al sitio de Comercio, '
         },
         requestOptions: {
           idempotencyKey: 'edf'
@@ -54,8 +54,8 @@ export async function POST(request: NextRequest) {
         payer: {
           email: formData.payer.email
         },
-        installments: formData.installments
-      }
+        installments: formData.installments,
+      },
     })
     // .then(console.log).catch(console.log);
 

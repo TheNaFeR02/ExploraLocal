@@ -75,8 +75,8 @@ export default function RentPage({ rent }: { rent: RentWithRelations }) {
 
           </div>
           <div className="p-4">
-            <h1 className="text-xl font-bold">Hotel Casa Blanca</h1>
-            <p className="text-sm text-muted-foreground">Mompox - Bolívar</p>
+            <h1 className="text-xl font-bold">{rent.name}</h1>
+            <p className="text-sm text-muted-foreground">{rent.city} - {rent.department}</p>
           </div>
           <Tabs defaultValue="acerca-de" className="mb-20">
             <TabsList className="border-b w-full flex justify-around">

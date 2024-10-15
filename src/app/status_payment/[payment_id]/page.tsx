@@ -1,6 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { StatusScreen } from "@mercadopago/sdk-react";
+import Link from "next/link";
 import { useParams, useRouter } from 'next/navigation'
 
 
@@ -15,14 +16,18 @@ export default function PaymentStatusPage() {
 
         <StatusScreen
           initialization={{ paymentId: params.payment_id }}
-          onReady={() => { }}
-          onError={() => { }}
+        // onReady={() => { }}
+        // onError={() => { }}
         />
         <div className="flex justify-center" >
           {/* TODO: REGRESAR A LA LISTA DE ARRIENDOS HECHOS POR EL USUARIO, ORGANIZADOS POR MÁS RECIENTES. 
           TODO: La card del booking ha de hacer un get a la reserva hecha por el usuario con su información.
           */}
           <Button onClick={() => router.push("/")}>Regresar a la página</Button>
+          {/* <Button asChild>
+            <Link href="/login">Regresar a la página</Link>
+          </Button> */}
+
         </div>
       </div>
     </>

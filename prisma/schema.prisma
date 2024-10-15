@@ -63,6 +63,8 @@ model Rent {
   price         Float
   profile_photo String
   slug          String
+  department    String
+  city          String?
   host          User          @relation(fields: [hostId], references: [id])
   hostId        Int
   description   String
