@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 
 /*
 Validates the booking dates selected are not occupied. 
+TODO: Missing error handling.
 */
 export async function areBookingDatesAvailable(rentId: number, from: string, to: string, rentType: string, pathname: string, roomId?: number) {
   const fromDate = new Date(from);
@@ -60,7 +61,7 @@ export async function createBookingRent(rentId: number, from: string, to: string
       create: {
         // TODO: The booking is being assigned to a fake user since there's no auth yet. It will change to the user is currently signed in.
         name: "Default Name",
-        email: "default@example.com"
+        email: "default2@example.com"
       }
     }
   };

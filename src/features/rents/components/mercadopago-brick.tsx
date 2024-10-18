@@ -96,7 +96,10 @@ export default function MercadoPagoBricks(
     formData.description = rent.rentType === 'APARTMENT' ? rent.name : room?.name;
 
     // callback llamado al hacer clic en el botón enviar datos
-    return new Promise((resolve: any, reject) => {
+    return new Promise(async (resolve: any, reject) => {
+      // TODO: Handle error inside function, and show error here.
+      const datesAvailable = await areBookingDatesAvailable(rent?.id, from, to, rent.rentType, pathname, room?.id)
+
       fetch("/process_payment", {
         method: "POST",
         headers: {
@@ -109,9 +112,6 @@ export default function MercadoPagoBricks(
           // recibir el resultado del pago
           try {
             if (response.status === 'approved') {
-
-              const datesAvailable = await areBookingDatesAvailable(rent?.id, from, to, rent.rentType, pathname, room?.id)
-
 
               if (datesAvailable) {
                 await createBookingRent(rent?.id, from, to, rent.rentType, pathname, room?.id);
@@ -132,6 +132,7 @@ export default function MercadoPagoBricks(
             console.log(e)
           }
           resolve();
+
         })
         .catch((error) => {
           // manejar la respuesta de error al intentar crear el pago
