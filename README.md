@@ -90,3 +90,6 @@ POSTGRES_DATABASE="************"
 - [ ] Flow direction -> for payment, pse & bank transfer.
 - [ ] Rent share screen, but button link is not changing for hotels in url when its a hotel.
 - [ ] test real credit, debit and pse transactions. Check flow.
+
+
+- [ ] Once the payment is complete, make sure to create the RentBooking so next time the dates won't appear as available.

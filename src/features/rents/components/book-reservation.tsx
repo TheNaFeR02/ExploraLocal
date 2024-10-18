@@ -167,7 +167,10 @@ export default async function BookReservation({ bookings, rentId, numberOfDays, 
       )} */}
 
       {total ? (
-        <MercadoPagoBricks total={total} description={rent.name} />
+        <MercadoPagoBricks
+          total={total}
+          rent={{ id: rentId, name: rent.name, rentType: rent.type }}
+        />
       ) : (
         <>
           <div className='pt-4'>

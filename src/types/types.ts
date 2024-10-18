@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client'
 
 // https://www.prisma.io/blog/satisfies-operator-ur8ys8ccq7zb#a-little-background
 export const rentWithRoomsAndBookingsSelect = {
+  id: true,
   name: true,
   profile_photo: true,
   rooms: {

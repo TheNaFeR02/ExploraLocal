@@ -18,13 +18,25 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RoomContext } from "./booking-hotel-details";
 
 
-export default function EditBookingDate({ bookings, rentType }: { bookings: RentBooking[], rentType: RentType }) {
+export default function EditBookingDate(
+  { bookings,
+    rentType,
+    // callback
+  }: {
+    bookings: RentBooking[],
+    rentType: RentType,
+    // callback: (date: DateRange | undefined) => void
+  }) {
   const [dateFromChild, setDateFromChild] = useState<DateRange | undefined>(undefined);
   const { roomSelected, updateRoomSelected } = useContext(RoomContext)
 
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  // useEffect(() => {
+  //   callback(dateFromChild)
+  // }, [dateFromChild])
 
   const createQueryString = useCallback(
     (params: Record<string, string>) => {
@@ -38,13 +50,13 @@ export default function EditBookingDate({ bookings, rentType }: { bookings: Rent
   )
 
   const handleUpdateQueryParams = useCallback(() => {
-  if (dateFromChild && dateFromChild.from && dateFromChild.to) {
-    const fromDate = dateFromChild.from.toISOString().split('T')[0];
-    const toDate = dateFromChild.to.toISOString().split('T')[0];
-    console.log("fromdate and todate", fromDate, toDate);
-    router.push(pathname + '?' + createQueryString({ from: fromDate, to: toDate }));
-  }
-}, [dateFromChild, createQueryString, pathname, router]);
+    if (dateFromChild && dateFromChild.from && dateFromChild.to) {
+      const fromDate = dateFromChild.from.toISOString().split('T')[0];
+      const toDate = dateFromChild.to.toISOString().split('T')[0];
+      console.log("fromdate and todate", fromDate, toDate);
+      router.push(pathname + '?' + createQueryString({ from: fromDate, to: toDate }));
+    }
+  }, [dateFromChild, createQueryString, pathname, router]);
 
   function handleDataFromChild(data: DateRange | undefined) {
     setDateFromChild(data);

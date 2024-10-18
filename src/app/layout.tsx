@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import '@smastrom/react-rating/style.css'
+import { Toaster } from "@/components/ui/toaster"
 import { initMercadoPago } from '@mercadopago/sdk-react';
 
 // Initialize MercadoPago
@@ -9,7 +10,7 @@ try {
   // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
   // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
   console.log(process.env.PUBLIC_KEY_MERCADOPAGO)
-  initMercadoPago('TEST-e0ee2946-9643-4f8a-8f25-0a642b018393', {locale: 'es-CO'})
+  initMercadoPago('TEST-e0ee2946-9643-4f8a-8f25-0a642b018393', { locale: 'es-CO' })
   console.log("MercadoPago initialized successfully");
 } catch (error) {
   console.error("Error initializing MercadoPago:", error);
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={work_sans.className}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

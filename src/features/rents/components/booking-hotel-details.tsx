@@ -8,6 +8,7 @@ import RoomList from "./room-list";
 import { createContext } from "react"
 import { RentBooking } from "@prisma/client";
 import MercadoPagoBricks from "./mercadopago-brick";
+import { DateRange } from "react-day-picker";
 
 interface RoomContextType {
   roomSelected?: myRoomWithBookingsAndServices;
@@ -30,6 +31,7 @@ export default function BookingHotelDetails({
 ) {
   const [roomSelected, setRoomSelected] = useState<myRoomWithBookingsAndServices>()
 
+
   const updateRoomSelected = (room: myRoomWithBookingsAndServices) => {
     setRoomSelected(room)
   }
@@ -38,6 +40,12 @@ export default function BookingHotelDetails({
   const subtotal = costPerNight * numberOfDays;
   const serviceTax = subtotal * 0.15;
   const total = subtotal + serviceTax;
+
+
+  const [dateSelected, setDateSelected] = useState<DateRange | undefined>()
+  const handleDateCallback = (bookingDates: DateRange | undefined) => {
+    setDateSelected(bookingDates)
+  }
 
   return (
     <>
@@ -58,7 +66,9 @@ export default function BookingHotelDetails({
           <h2 className='font-semibold'>Fecha y huéspedes</h2>
         </div>
         <div className='py-3'>
-          <EditBookingDate bookings={roomSelected?.bookings as RentBooking[]} rentType={"HOTEL"} />
+          <EditBookingDate bookings={roomSelected?.bookings as RentBooking[]} rentType={"HOTEL"}
+          //  callback={handleDateCallback} 
+          />
           <EditGuests capacity={roomSelected?.capacity || 0} />
         </div>
 
@@ -85,8 +95,13 @@ export default function BookingHotelDetails({
         </div>
 
         <hr className='mx-auto w-full bg-gray-200 h-0.5'></hr>
-        {total ? (
-          <MercadoPagoBricks total={total} description={roomSelected?.name || rentWithRoomAndBookings.name} />
+        {total && roomSelected ? (
+          <MercadoPagoBricks
+            total={total}
+            rent={{ id: rentWithRoomAndBookings.id, name: rentWithRoomAndBookings.name, rentType: 'HOTEL' }}
+            room={{ id: roomSelected.id, name: roomSelected.name }}
+          // dateRange={dateSelected} 
+          />
         ) : (
           <>
             <div className='pt-4'>
