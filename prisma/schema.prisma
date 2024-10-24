@@ -63,8 +63,8 @@ model Rent {
   price         Float
   profile_photo String
   slug          String
-  department    String
-  city          String?
+  department    String        @default("Bolívar")
+  city          String?       @default("Mompox")
   host          User          @relation(fields: [hostId], references: [id])
   hostId        Int
   description   String
@@ -115,6 +115,7 @@ enum RentType {
 }
 
 model Review {
+  
   id             Int      @id @default(autoincrement())
   rating         Float
   comment        String
@@ -134,16 +135,23 @@ model Review {
   @@index([reviewableId, reviewableType])
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
 model RentBooking {
   id     Int      @id @default(autoincrement())
   from   DateTime
   to     DateTime
-  User   User?    @relation(fields: [userId], references: [id])
+  User   User?    @relation(fields: [userId], references: [id]) // optional for now to be able to have bookings without a user.
   userId Int?
   Rent   Rent    @relation(fields: [rentId], references: [id])
   rentId Int
   Room   Room?    @relation(fields: [roomId], references: [id])
   roomId Int?
+  status BookingStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

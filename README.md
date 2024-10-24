@@ -82,14 +82,46 @@ POSTGRES_DATABASE="************"
 ## To run local
 ```
 
-- [ ] Seed database
-- [ ] Services icons
-- [ ] Assets from internet. One hotel & One Apartment
-- [ ] Profile pic, collection, services, rules & rooms.
-- [ ] Rent 
-- [ ] Flow direction -> for payment, pse & bank transfer.
+- [x] Seed database
+- [x] Services icons
+- [x] Assets from internet. One hotel & One Apartment
+- [x] Profile pic, collection, services, rules & rooms.
+- [x] Rent 
+- [x] Flow direction -> for payment, pse & bank transfer.
+- [x] test real credit, debit and pse transactions. Check flow.
 - [ ] Rent share screen, but button link is not changing for hotels in url when its a hotel.
-- [ ] test real credit, debit and pse transactions. Check flow.
 
 
-- [ ] Once the payment is complete, make sure to create the RentBooking so next time the dates won't appear as available.
+- [x] Once the payment is complete, make sure to create the RentBooking so next time the dates won't appear as available.
+
+- [x] Check date returned when selecting range in the calendar: Returns the day in local date (colombia)
+- [x] Date recieved in parent component of calendar is parse to be written as ex 25dic-27dic, check the parse and efficiency: It has an UTC option, which says that do not take into account the offset of the client so it preserves the same date regardless of the client.
+- [ ]
+- [ ] Verify the dates and where are Date objects being created.
+
+
+- [x] Create services/amenities
+- [x] Toggle between Hotel and apt with studio to test both rent types.
+- [x] Create a hotel 
+- [x] Create and link the room for the hotel created.
+- [x] Create a small seeding database for renting an apartment & hotel process.
+
+- [x] Write createProvisionalBooking function to create a provisional booking.
+- [x] Write confirmBooking function to change the status of the RentBooking
+- [x] Test 
+- [x] Create a RentBooking with a card.
+
+- [x] Using custom calendar component of Shadcn that uses version ^9 of react-day-picker. Specifically to handle timezone property (UTC)
+- [x] No more shift day, when calendar renders disabled days.
+- [x] Create a RentBooking with a credit card using new calendar
+- [x] Create a RentBooking with a debit card using new calendar
+- [ ] Create a RentBooking with pse using new calendar in production set up. (change price to minimum)
+- [ ] Look for assets to create a Rent of type apartment.
+- [ ] Go back to seed and create a script for an Apartment creation.
+
+- [ ] Create a RentBooking for an Apartment with a credit card using new calendar on production.
+- [ ] Create a RentBooking for an Apartment with a debit card using new calendar on production.
+- [ ] Create a RentBooking for an Apartment with pse using new calendar in production set up. (change price to minimum)
+- [ ] Test custom calendar component for personal uses cases
+- [ ] Create a RentBooking with pse
+

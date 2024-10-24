@@ -24,7 +24,7 @@ export const rentWithRoomsAndBookingsSelect = {
         },
         where: {
           from: {
-            gte: new Date() // Fetching the occupied bookings from today, old ones should be dismissed.
+            gte: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)  // Fetching the occupied bookings from today, old ones should be dismissed.
           }
         }
       },

@@ -4,6 +4,18 @@
 // https://www.mercadopago.com.co/developers/es/docs/checkout-bricks/payment-brick/default-rendering#editor_2
 import { initMercadoPago } from '@mercadopago/sdk-react';
 
+
+
+import { IPaymentBrickCustomization } from "@mercadopago/sdk-react/bricks/payment/type"
+import { Payment } from '@mercadopago/sdk-react';
+import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { areBookingDatesAvailable, deleteProvisionalBooking, createProvisionalBooking, confirmBooking } from '@/server/actions';
+import { useToast } from '@/hooks/use-toast';
+import { ToastAction } from '@/components/ui/toast';
+
+
+
 // Initialize MercadoPago
 try {
   // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
@@ -12,23 +24,6 @@ try {
 } catch (error) {
   console.error("Error initializing MercadoPago:", error);
 }
-
-
-import { IPaymentBrickCustomization } from "@mercadopago/sdk-react/bricks/payment/type"
-import { Payment } from '@mercadopago/sdk-react';
-import { useCallback, useState } from 'react';
-import PaymentStatusScreen from './payment-status-screen';
-
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Items } from 'mercadopago/dist/clients/commonTypes';
-import { DateRange } from 'react-day-picker';
-import { createBookingRent, areBookingDatesAvailable } from '@/server/actions';
-import { revalidatePath } from 'next/cache';
-import { useToast } from '@/hooks/use-toast';
-import { ToastAction } from '@/components/ui/toast';
-
-
-
 
 export default function MercadoPagoBricks(
   { total,
@@ -62,21 +57,21 @@ export default function MercadoPagoBricks(
   //   to: toDate,
   // };
 
-  const createQueryString = useCallback(
-    (params: Record<string, string>) => {
-      const searchParams = new URLSearchParams(window.location.search)
-      Object.keys(params).forEach(key => {
-        searchParams.set(key, params[key])
-      })
-      return searchParams.toString()
-    },
-    []
-  )
+  // const createQueryString = useCallback(
+  //   (params: Record<string, string>) => {
+  //     const searchParams = new URLSearchParams(window.location.search)
+  //     Object.keys(params).forEach(key => {
+  //       searchParams.set(key, params[key])
+  //     })
+  //     return searchParams.toString()
+  //   },
+  //   []
+  // )
 
 
   const initialization = {
     amount: total,
-    preferenceId: "<PREFERENCE_ID>",
+    preferenceId: "<PREFERENCE_ID>", // If provided, you could choose preferences in the payment, for ex: limiting the number of installments, etc.
   };
 
   const customization: IPaymentBrickCustomization = {
@@ -97,47 +92,77 @@ export default function MercadoPagoBricks(
 
     // callback llamado al hacer clic en el botón enviar datos
     return new Promise(async (resolve: any, reject) => {
-      // TODO: Handle error inside function, and show error here.
-      const datesAvailable = await areBookingDatesAvailable(rent?.id, from, to, rent.rentType, pathname, room?.id)
 
-      fetch("/process_payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then(async (response) => response.json())
-        .then(async ({ response }) => {
-          // recibir el resultado del pago
-          try {
-            if (response.status === 'approved') {
+      try {
+        const datesAvailable = await areBookingDatesAvailable(rent?.id, from, to, rent.rentType, pathname, room?.id)
 
-              if (datesAvailable) {
-                await createBookingRent(rent?.id, from, to, rent.rentType, pathname, room?.id);
-                router.push(`/status_payment/${response.id}/` + '?' + createQueryString({ from: from, to: to }));
-              } else {
-                toast({
-                  variant: "destructive",
-                  title: "Ocurrió un error al crear la reserva.",
-                  description: "Verifique si las fechas se encuentran disponibles y reintente de nuevo.",
-                  action: <ToastAction altText="Cerrar">Try again</ToastAction>,
-                })
-                console.log('Booking dates are not available');
-                // Handle the case where booking dates are not available
-              }
-            }
-            // router.push(`/status_payment/${response.id}/`) // page that paints the statusbrick with the id of the payment
-          } catch (e) {
-            console.log(e)
-          }
-          resolve();
+        if (!datesAvailable) {
+          toast({
+            variant: "destructive",
+            title: "Ocurrió un error al crear la reserva.",
+            description: "Verifique si las fechas se encuentran disponibles y reintente de nuevo.",
+            action: <ToastAction altText="Cerrar">Try again</ToastAction>,
+          });
+          console.log('booking dates are not available');
+          throw new Error('Booking dates are not available')
+        }
 
+        const provisionalBooking = await createProvisionalBooking(rent?.id, from, to, rent.rentType, pathname, room?.id);
+
+        if (!provisionalBooking)
+          throw new Error('There was an error creating the provisional booking')
+
+        fetch("/process_payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         })
-        .catch((error) => {
-          // manejar la respuesta de error al intentar crear el pago
-          reject();
-        });
+          .then(async (response) => response.json())
+          .then(async ({ response }) => {
+            // recibir el resultado del pago
+            try {
+              if (response.status === 'approved') {
+                // Confirm the booking
+                await confirmBooking(provisionalBooking.id);
+                router.push(`/status_payment/${response.id}/`
+                  // + '?' + createQueryString({ from: from, to: to } )
+                );
+              }
+
+              // possible different status for pse...
+              // if (response.status === 'pending'){
+              //   ...
+              // }
+
+
+
+            } catch (e) {
+              console.log(e)
+              await deleteProvisionalBooking(provisionalBooking.id).catch((e) => console.log(e));
+              toast({
+                variant: "destructive",
+                title: "Ocurrió un error al procesar el pago.",
+                description: "El pago no fue aprobado. Por favor, intente de nuevo.",
+                action: <ToastAction altText="Cerrar">Try again</ToastAction>,
+              });
+            }
+
+
+            resolve();
+          })
+          .catch((error) => {
+            // manejar la respuesta de error al intentar crear el pago
+            reject();
+          });
+
+
+      } catch (e) {
+        console.log("Payment was not proceeded. It could be given overlapped dates, check if a day within the range is occupied OR there was an error creating the provisional booking. : ", e)
+      }
+
+
     });
   };
   const onError = async (error: any) => {

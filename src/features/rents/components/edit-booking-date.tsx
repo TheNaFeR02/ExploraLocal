@@ -76,9 +76,19 @@ export default function EditBookingDate(
 
     const from = searchParams.get('from')
     const to = searchParams.get('to')
-    if (from && to)
-      setDateFromChild({ from: new Date(from), to: new Date(to) })
-    else {
+
+
+
+    if (from && to) {
+      const fromDateParts = from.split('-').map(Number);
+      const toDateParts = to.split('-').map(Number);
+
+      setDateFromChild({
+        from: new Date(Date.UTC(fromDateParts[0], fromDateParts[1] - 1, fromDateParts[2])),
+        to: new Date(Date.UTC(toDateParts[0], toDateParts[1] - 1, toDateParts[2]))
+      });
+
+    } else {
       setDateFromChild(undefined)
     }
   }, [rentType, searchParams])
@@ -93,9 +103,9 @@ export default function EditBookingDate(
   function formatDateRange(dateRange: DateRange | undefined): string {
     if (!dateRange || !dateRange.from || !dateRange.to) return "Elegir días";
 
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
-    const fromDate = new Intl.DateTimeFormat('es-ES', options).format(dateRange.from);
-    const toDate = new Intl.DateTimeFormat('es-ES', options).format(dateRange.to);
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', timeZone: 'UTC' };
+    const fromDate = dateRange.from.toLocaleDateString('es-ES', options);
+    const toDate = dateRange.to.toLocaleDateString('es-ES', options);
 
     return `${fromDate} - ${toDate}`;
   }
