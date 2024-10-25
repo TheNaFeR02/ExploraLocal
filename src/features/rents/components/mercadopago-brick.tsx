@@ -3,27 +3,14 @@
 // Configurar el brick from the documentation. They have react-jsx therefore we had to use any. It seems they don't support ts yet without third party libraries.
 // https://www.mercadopago.com.co/developers/es/docs/checkout-bricks/payment-brick/default-rendering#editor_2
 import { initMercadoPago } from '@mercadopago/sdk-react';
-
-
-
 import { IPaymentBrickCustomization } from "@mercadopago/sdk-react/bricks/payment/type"
 import { Payment } from '@mercadopago/sdk-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { areBookingDatesAvailable, deleteProvisionalBooking, createProvisionalBooking, confirmBooking } from '@/server/actions';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 
-
-
-// Initialize MercadoPago
-try {
-  // initMercadoPago(process.env.PUBLIC_KEY_MERCADOPAGO ?? '');
-  if (process.env.NEXT_PUBLIC_KEY_MERCADOPAGO) initMercadoPago(process.env.NEXT_PUBLIC_KEY_MERCADOPAGO, { locale: 'es-CO' })
-  console.log("MercadoPago initialized successfully");
-} catch (error) {
-  console.error("Error initializing MercadoPago:", error);
-}
 
 export default function MercadoPagoBricks(
   { total,
@@ -36,6 +23,18 @@ export default function MercadoPagoBricks(
     room?: { id: number, name: string }
     // dateRange?: DateRange | undefined
   }) {
+
+  useEffect(() => {
+    // Inicializamos el SDK
+    initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!);
+
+    // Desmontamos el componente de bricks cuando se desmonte el componente
+    return () => {
+      // window?.cardPaymentBrickController?.unmount();
+    };
+  }, []);
+
+
   const { toast } = useToast()
   const [psePaymentStatusId, setPsePaymentStatusId] = useState<undefined | string>(undefined)
   const router = useRouter()
@@ -126,9 +125,6 @@ export default function MercadoPagoBricks(
               if (response.status === 'approved') {
                 // Confirm the booking
                 await confirmBooking(provisionalBooking.id);
-                router.push(`/status_payment/${response.id}/`
-                  // + '?' + createQueryString({ from: from, to: to } )
-                );
               }
 
               // possible different status for pse...
@@ -137,6 +133,9 @@ export default function MercadoPagoBricks(
               // }
 
 
+              router.push(`/status_payment/${response.id}/`
+                // + '?' + createQueryString({ from: from, to: to } )
+              );
 
             } catch (e) {
               console.log(e)
