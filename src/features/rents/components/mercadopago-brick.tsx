@@ -26,7 +26,7 @@ export default function MercadoPagoBricks(
 
   useEffect(() => {
     // Inicializamos el SDK
-    initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY!);
+    initMercadoPago(process.env.NEXT_PUBLIC_KEY_MERCADOPAGO!);
 
     // Desmontamos el componente de bricks cuando se desmonte el componente
     return () => {
