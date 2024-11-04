@@ -29,9 +29,9 @@ export default function MercadoPagoBricks(
     initMercadoPago(process.env.NEXT_PUBLIC_KEY_MERCADOPAGO!);
 
     // Desmontamos el componente de bricks cuando se desmonte el componente
-    return () => {
-      // window?.cardPaymentBrickController?.unmount();
-    };
+    // return () => {
+    // window?.cardPaymentBrickController?.unmount();
+    // };
   }, []);
 
 
