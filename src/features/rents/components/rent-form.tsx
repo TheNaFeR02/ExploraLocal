@@ -50,7 +50,7 @@ function checkFileType(file: File) {
 
 export const fileSchema = z.object({
   file: z.instanceof(File)
-  .refine((file) => file.size < MAX_FILE_SIZE, "Tamaño máximo por imagen es 4MB.")
+    .refine((file) => file.size < MAX_FILE_SIZE, "Tamaño máximo por imagen es 4MB.")
   // .refine((file) => checkFileType(file), "Only .jpg, .png and .jpeg formats are supported.")
 });
 
@@ -412,7 +412,7 @@ export function RentForm() {
                             </SelectContent>
                           </Select>
                           <FormDescription>
-                            Ej: "Apartmento", "Hotel"
+                            Ej: &quot;Apartamento&quot;, &quot;Hotel&quot;
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
