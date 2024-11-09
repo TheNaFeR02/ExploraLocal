@@ -125,3 +125,8 @@ POSTGRES_DATABASE="************"
 - [ ] Test custom calendar component for personal uses cases
 - [ ] Create a RentBooking with pse
 
+
+
+- [ ] Handle onSubmitAction 
+- [x] Create Rent form
+

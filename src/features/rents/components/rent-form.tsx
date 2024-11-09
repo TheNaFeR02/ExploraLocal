@@ -1,5 +1,5 @@
 'use client'
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { RentSchema } from "../../../../prisma/generated/zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -20,6 +20,14 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { Input } from "@/components/ui/input";
 import { useFormState } from "react-dom";
 import { useEffect, useRef, useState } from "react";
@@ -42,28 +50,39 @@ function checkFileType(file: File) {
 
 export const fileSchema = z.object({
   file: z.instanceof(File)
-  // .refine((file) => file.size < MAX_FILE_SIZE, "Tamaño máximo por imagen es 4MB.")
+  .refine((file) => file.size < MAX_FILE_SIZE, "Tamaño máximo por imagen es 4MB.")
   // .refine((file) => checkFileType(file), "Only .jpg, .png and .jpeg formats are supported.")
 });
 
 const formSchema = RentSchema.pick({
   name: true,
-  profile_photo: true,
   description: true,
+  profile_photo: true,
   collection: true,
+  department: true,
+  city: true,
+  rules: true, // DIFF FOR HOTEL
+  type: true,
+  capacity: true, // DIFF FOR HOTEL 
+  price: true, // DIFF FOR HOTEL
+
 }).omit({
   profile_photo: true,
   collection: true,
 }).extend({
-  name: RentSchema.shape.name.refine((name) => name.length > 0, "Ingrese un nombre"),
-  description: RentSchema.shape.description.refine((desc) => desc.length > 0, "Agregar una descripción"),
+  name: RentSchema.shape.name
+    .refine((name) => name.length > 0, "Ingrese un nombre"),
+  description: RentSchema.shape.description
+    .refine((desc) => desc.length > 0, "Agregar una descripción"),
+  rules: z.array(z.object({ value: z.string() })),
   profile_photo: fileSchema,
   // https://github.com/orgs/react-hook-form/discussions/11096#discussioncomment-9266218
   collection: (typeof window === "undefined" ? z.any() : z.instanceof(FileList))
     .refine((files) => {
       const fileExtension = files[0].name.split(".").pop()
       return fileExtension && ["png", "jpg", "jpeg"].includes(fileExtension)
-    }, "png, jpg y jpeg son los formatos soportados.")
+    }, "png, jpg y jpeg son los formatos soportados."),
+
 })
 
 
@@ -72,23 +91,39 @@ export function RentForm() {
     message: "",
   })
 
+
   const form = useForm<z.infer<typeof formSchema>>(
     {
       resolver: zodResolver(formSchema),
+      // mode: "all",
       defaultValues: {
         name: "",
-        // profile_photo: "",
         description: "",
-        collection: [],
+        // profile_photo: "",
+        // collection: [],
+        department: "Bolívar",
+        city: "Mompox",
+        rules: [{ value: "" }],
+        type: "APARTMENT",
+        capacity: null,
+        price: 1500
       }
     })
 
-  
+
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control, // Ensure control is passed here
+    name: "rules"
+  });
+
+
 
   const formRef = useRef<HTMLFormElement>(null);
   // const [uploadedFileUrl, setUploadedFileUrl] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [collectionPreview, setCollectionPreview] = useState<string[]>([])
+  const [rentType, setRentType] = useState<string>("APARTMENT")
 
   return (
     <>
@@ -98,10 +133,7 @@ export function RentForm() {
           action={formAction}
           onSubmit={(evt) => {
             evt.preventDefault();
-
-            console.log("handle submit", formRef.current)
             form.handleSubmit(() => {
-              console.log(formRef.current)
               formAction(new FormData(formRef.current!))
             })(evt);
           }}
@@ -248,6 +280,217 @@ export function RentForm() {
                         </FormItem>
                       )}
                     />
+
+
+                    <FormField
+                      control={form.control}
+                      name="department"
+                      render={({ field }) => (
+                        <FormItem key={field.value}>
+                          <FormLabel>Departamento</FormLabel>
+                          <Select
+                            onValueChange={field.onChange} defaultValue={field.value}
+                            name={field.name}
+                          // {...field}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecciona departamento" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Bolívar">Bolívar</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Departamento de Residencia
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem key={field.value}>
+                          <FormLabel>Ciudad</FormLabel>
+                          <Select
+                            onValueChange={field.onChange} defaultValue={field.value}
+                            name={field.name}
+                          // {...field}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Seleccionar ciudad" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Mompox">Mompox</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Ciudad de Residencia
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {fields.map((field, index) => (
+                      <FormField
+                        key={field.id}
+                        control={form.control}
+                        name={`rules.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Regla #{index + 1}</FormLabel>
+                            <div className="flex gap-2">                            <FormControl>
+                              <Input placeholder={`Ej: No fumar...`} {...field} />
+                            </FormControl>
+                              <Button type="button" size={"sm"} variant="destructive" onClick={() => remove(index)}>Eliminar</Button>
+                            </div>
+                            <FormDescription>
+                              Estas son las reglas del sitio.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+
+                    <Button
+                      type="button"
+                      className="mx-0 w-28"
+                      onClick={() => append({ value: "" })}
+                    >Añadir Regla</Button>
+
+
+                    {/* {fields.map((field, index) => (
+                      <div key={field.id}>
+                        <Input
+                          key={field.id} // important to include key with field's id
+                          {...form.register(`rules.${index}.value`)}
+                        />
+                        <button type="button" onClick={() => remove(index)}>Delete</button>
+                      </div>
+                    ))}
+
+                    <Button
+                      type="button"
+                      onClick={() => append({ value: "" })}
+                    >Append</Button> */}
+
+
+
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <FormItem key={field.value}>
+                          <FormLabel>Tipo de residencia</FormLabel>
+                          <Select
+                            onValueChange={
+                              (value) => {
+                                setRentType(value);
+                                field.onChange(value)
+                              }
+                            }
+                            value={rentType}
+                            name={field.name}
+                          // {...field}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Seleccionar tipo de renta" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="APARTMENT">Apartamento</SelectItem>
+                              <SelectItem value="HOTEL">Hotel</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Ej: "Apartmento", "Hotel"
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {rentType === 'APARTMENT' && (
+                      <FormField
+                        control={form.control}
+                        name='capacity'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Capacidad de personas</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="Número de personas" {...field}
+                                // onChange={event => field.onChange(+event.target.value)}
+                                value={field.value ?? 2}
+
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Será la capacidad máxima recomendada para el alojamiento.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      >
+                      </FormField>
+                    )}
+
+                    {rentType === 'APARTMENT' && (
+                      <FormField
+                        control={form.control}
+                        name='price'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Precio por noche</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="Precio en COP"
+                                {...field}
+                                value={field.value ?? 1500}
+                              // onChange={event => field.onChange(+event.target.value)}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Precio por noche del alojamiento.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      >
+                      </FormField>
+                    )}
+
+
+                    {/* <FormField
+                      control={form.control}
+                      name="department"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Departamento</FormLabel>
+                          <Select onValueChange={field.onChange} >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecciona un departamento" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="bolivar">Bolívar</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Departamento de residencia
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    /> */}
 
 
                     {/* <UploadButton

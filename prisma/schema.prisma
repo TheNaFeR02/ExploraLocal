@@ -68,7 +68,7 @@ model Rent {
   profile_photo String
   slug          String
   department    String        @default("Bolívar")
-  city          String?       @default("Mompox")
+  city          String       @default("Mompox")
   host          User          @relation(fields: [hostId], references: [id])
   hostId        Int
   description   String
